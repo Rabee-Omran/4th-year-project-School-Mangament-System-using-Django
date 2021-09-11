@@ -1,0 +1,93 @@
+{% extends 'hod_template/base_template.html' %}
+{% block page_title %}
+تقارير المدرسين
+{% endblock page_title %}
+{% block main_content %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-12">
+            <!-- general form elements -->
+          
+      <div class="card card-primary ">
+        <div class="card-header">
+          <h3 class="card-title">جميع التقارير  </h3>
+        </div>    
+
+
+          <form method="GET">
+          <div class="row p-3 ">
+            <div class="col-sm-2" >
+                <div class="form-group is-valid">  
+                  <input type="text" name="staff_id__admin__first_name__icontains" class="form-control is-valid" placeholder="   الاسم الأول للمدرس" title="" ></div>
+              </div>
+              <div class="col-sm-2" >
+                <div class="form-group is-valid">  
+                  <input type="text" name="staff_id__admin__first_name__icontains" class="form-control is-valid" placeholder=" الاسم الأخير للمدرس" title="" ></div>
+              </div>
+
+            <div class="col-sm-2" >
+              <div class="form-group is-valid">  
+                <input type="text" name="student_id__admin__first_name__icontains" class="form-control is-valid" placeholder=" الاسم الأول للطالب" title="" ></div>
+            </div>
+
+            <div class="col-sm-2">            
+              <div class="form-group is-valid">   
+                <input type="text" name="student_id__admin__last_name__icontains" value="" class="form-control is-valid" placeholder=" الاسم الأخير للطالب" title="" >
+              </div>
+            </div>
+
+            <div class="col-sm-2">       
+              <div class="form-group is-valid">         
+                <input type="text" name="studentInfo_id__subject_id__subject_name__icontains" value="" class="form-control is-valid" placeholder="اسم المادة" title="" ></div>    
+          </div>  
+
+          <div class="col-sm-2">
+            <input type="submit" value="ابحث" class="btn btn-info">
+        </div>      
+      </form> 
+    </div>
+           
+            
+   
+
+     
+      
+       
+         <div class="table">
+         <table class="table">
+             <tr>
+                 <th>ID</th>
+                 <th>المدرس</th>
+                 <th>الطالب</th>
+                 <th> المادة</th>
+                 <th> العام الدراسي</th>
+                 <th> التقرير</th>
+               
+             </tr>
+            
+             {% for info in info_all %}
+                  <tr>
+                      <td>{{ info.id }}</td>
+                      <td>{{ info.staff_id.admin.first_name }} {{ info.staff_id.admin.last_name }}</td>
+                      <td>{{ info.student_id.admin.first_name }} {{ info.student_id.admin.last_name }}</td>
+                      <td>{{ info.studentInfo_id.subject_id.subject_name }}</td>
+                      <td>{{info.studentInfo_id.session_year_id}}</td>
+                      <td><a href="{%url 'show_info_2' info.id%}">مشاهدة التقرير</a></td>
+                     
+                  </tr>
+             {% endfor %}
+         </table>
+         </div>
+      </div>
+
+
+          </div>
+          </div>
+      </div>
+    </section>
+  <!-- Modal -->
+
+    <!-- /.content -->
+{% endblock main_content %}

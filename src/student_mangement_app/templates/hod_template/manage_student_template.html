@@ -1,0 +1,92 @@
+{% extends 'hod_template/base_template.html' %} {% load bootstrap4 %} {% block page_title %} إدارة الطلاب {% endblock page_title %} {% block main_content %}
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">معلومات الطلاب </h3>
+
+
+
+                        <div class="card-tools">
+
+
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>الاسم الأول </th>
+                                    <th>الاسم الأخير </th>
+                                    <th>اسم المستخدم </th>
+                                    <th>الإيميل</th>
+                                    <th>العنوان</th>
+                                    <th>الجنس</th>
+                                    <th>صورة الطالب </th>
+                                    <th>العام الدراسي </th>
+                                    <th>الصف</th>
+                                    <th>آخر تسجيل دخول </th>
+                                    <th>تاريخ الانضمام </th>
+                                    <th>تعديل</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <form method="GET">
+                                    <div class="row pt-2  pr-5">
+                                        <div class="col-sm-4">
+                                            <div class="form-group is-valid">
+
+
+                                                <input type="text" name="admin__first_name__icontains" class="form-control is-valid" placeholder="الاسم الأول" title="" id="id_admin__first_name__icontains">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group is-valid">
+
+                                                <input type="text" name="admin__last_name__icontains" class="form-control is-valid" placeholder="الاسم الأخير" title="" id="id_admin__last_name__icontains">
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="col-sm-2">
+                                            <input type="submit" value="ابحث" class="btn btn-info">
+                                        </div>
+                                    </div>
+                                </form>
+                                {% for student in students %}
+                                <tr>
+                                    <td>{{ student.admin.id }}</td>
+                                    <td>{{ student.admin.first_name }}</td>
+                                    <td>{{ student.admin.last_name }}</td>
+                                    <td>{{ student.admin.username }}</td>
+                                    <td>{{ student.admin.email }}</td>
+                                    <td>{{ student.address }}</td>
+                                    <td>{{ student.gender }}</td>
+                                    <td><img src="{{ student.profile_pic }}" style="width:100px" /></td>
+                                    <td>{{ student.session_year_id.session_start_year }} TO {{ student.session_year_id.session_end_year }}</td>
+                                    <td>{{ student.course_id.course_name }}</td>
+                                    <td>{{ student.admin.last_login }}</td>
+                                    <td>{{ student.admin.date_joined }}</td>
+                                    <td><a href="{% url 'edit_student' student_id=student.admin.id %}" class="btn btn-success">تعديل</a></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /.content -->
+{% endblock main_content %}

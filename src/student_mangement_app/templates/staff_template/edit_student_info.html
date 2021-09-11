@@ -1,0 +1,196 @@
+{% extends 'staff_template/base_template.html' %}
+{% block page_title %}
+تعديل التقارير
+{% endblock page_title %}
+{% block main_content %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+                    <div class="row">
+              <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">تعديل التقارير </h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+                <div class="card-body">
+                   <div class="form-group">
+                    <label>المادة </label>
+                    <select class="form-control" name="subject" id="subject">
+                        {% for subject in subjects %}
+                          <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>العام الدراسي  </label>
+                    <select class="form-control" name="session_year_id" id="session_year_id">
+                        {% for session_year in session_year_id %}
+                          <option value="{{ session_year.id }}">{{ session_year.session_start_year }} TO {{ session_year.session_end_year }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                  <!-- <div class="form-group">
+                     <button type="button" class="btn btn-primary btn-block" id="fetch_attendance">جلب التقارير   </button>
+                   </div>
+                   <div class="form-group" id="attendance_block" style="display:none">
+                    <label> التاريخ  </label>
+                    <select class="form-control" name="attendance_date" id="attendance_date">
+
+                    </select>
+                  </div> -->
+                    <div class="form-group">
+                        <div class="alert alert-danger" id="error_attendance" style="display:none">
+
+                        </div>
+                    </div>
+                    <div class="form-group" id="fetch_student_block" style="">
+                         <button type="button" class="btn btn-primary btn-block" id="fetch_student">جلب بيانات الطلاب  </button>
+                     </div>
+                </div>
+                <!-- /.card-body -->
+
+
+                <div id="student_data" class="card-footer">
+               
+
+                </div>
+                <div id="student_data2" class="card-footer"></div>
+            </div>
+            <!-- /.card -->
+
+
+
+          </div>
+          </div>
+      </div>
+    </section>
+    <!-- /.content -->
+{% endblock main_content %}
+{% block custom_js %}
+<script>
+    $(document).ready(function(){
+
+
+
+
+
+        $("#fetch_student").click(function(){
+
+            var subject=$("#subject").val();
+            var session_year=$("#session_year_id").val();
+
+            // var attendance_date=$("#attendance_date").val()
+
+            $.ajax({
+                url:'{% url 'get_info_student' %}',
+                type:'POST',
+                data:{subject:subject,session_year_id:session_year},
+            })
+            .done(function(response){
+                var json_data=JSON.parse(response);
+                var div_data="<div class='form-group'><label>حضور الطالب  : </label></div><div class='form-group'><div class='row'>";
+                    var div_data="<div class='form-group'><div class='row'>";
+                for(key in json_data)
+                {
+                    div_data+="<div class='col-lg-2'><div class='form-check'><input type='radio' id=student_data  name='student_data' value='"+json_data[key]['id']+"'><label class='form-check-label pl-2'>"+json_data[key]['name']+"</label></div></div>";
+                }
+                
+                div_data+="</div></div>";
+               
+                div_data+="<div class='form-group'>";
+                div_data+="<button id='get_info_button' class='btn btn-primary btn-block' type='button'>عرض التقرير  </button>";
+                div_data+="</div>";
+               
+            
+
+                $("#student_data").html(div_data);
+
+            })
+            .fail(function(){
+                alert("فشل في جلب بيانات الطلاب")
+            })
+
+
+            $(document).on("click","#get_info_button",function(){
+
+            var student_id =$("#student_data:checked").val();
+           
+            // console.log(student_id)
+            // var session_year=$("#session_year_id").val();
+
+            // var attendance_date=$("#attendance_date").val()
+
+            $.ajax({
+                url:'{% url 'get_info_content' %}',
+                type:'POST',
+                data:{student_id:student_id,subject:subject,session_year_id:session_year},
+            })
+            .done(function(response){
+
+               var json_data=JSON.parse(response);
+                    console.log("ssssssss")
+                 
+                
+                    var div_data="<div class='form-group'><div class='row'>";
+            
+                
+                div_data+="</div></div>";
+                div_data+=" <div class='form-group'><label>  التقرير : </label><textarea   name='info_data' id='info_data' rows='4' cols='50' class='form-control'>"+json_data['info'];
+         
+                div_data+= "</textarea></div>";
+                div_data+="<div class='form-group'>";
+                div_data+="<button id='save_info' class='btn btn-success btn-block' type='button'>حفظ  </button>";
+                div_data+="</div>";
+            
+
+
+                $("#student_data2").html(div_data);
+
+            })
+            .fail(function(){
+                alert("فشل في جلب بيانات الطلاب")
+            })
+
+            })
+                    })
+
+         $(document).on("click","#save_info",function(){
+
+                $(this).attr("disabled","disabled")
+                $(this).text("جاري الحفظ ...")
+               
+                var student_data=$("#student_data:checked").val();
+                var subject_id=$("#subject").val();
+                var session_year_id=$("#session_year_id").val();
+                var info_data = $('textarea#info_data').val();
+
+                
+
+                $.ajax({
+                        url:'{% url 'save_update_info' %}',
+                        type:'POST',
+                        data:{student_id:student_data,info_data:info_data,subject_id:subject_id,session_year_id:session_year_id},
+                    })
+                    .done(function(response){
+
+                      
+                        location.reload()
+                        // if(response=="OK"){
+                        //     alert("تم الحفظ ")
+                        // }
+                        // else{
+                        //     alert("فشل في الحفظ")
+                        // }
+                    })
+                    .fail(function(){
+                        alert("فشل في الحفظ")
+                    })
+
+        })
+
+    })
+</script>
+{% endblock custom_js %}

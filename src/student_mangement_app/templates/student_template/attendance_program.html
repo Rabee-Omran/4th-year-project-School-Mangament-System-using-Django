@@ -1,0 +1,38 @@
+{% extends 'student_template/base_template.html' %}
+{% block page_title %}
+برنامج الدوام
+{% endblock page_title %}
+{% block main_content %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-9 mx-auto">
+            <!-- general form elements -->
+            <div class="card card-primary">
+             
+              <!-- /.card-header -->
+              <!-- form start -->
+             
+        <!-- /.card-body -->
+       
+            <div class="card-header">
+              <h3 class="card-title"> البرنامج</h3>
+            </div>
+              
+              {% if att.image.url != None %}
+              <img src="{{att.image.url}}" class="img-responsive" alt="">
+              
+                {% else %}
+                <H2 class="p-5">لم تقم الإدارة بإضافة برنامج دوام بعد .</H2>
+                {% endif %}
+             </div>
+          </div>
+
+
+          </div>
+          </div>
+      </div>
+    </section>
+    <!-- /.content -->
+{% endblock main_content %}

@@ -1,0 +1,237 @@
+{% extends 'hod_template/base_template.html' %}
+{% block page_title %}
+إدارة الطلبات 
+{% endblock page_title %}
+{% block main_content %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+
+        <div class="form-group">
+            {% if messages %}
+              {% for message in messages %}
+              {% if message.tags == 'error' %}
+              <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+              {% endif %}
+              {% if message.tags == 'success' %}
+              <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+              {% endif %}
+              {% endfor %}
+            {% endif %}
+          </div>
+           <div class="row">
+          <div class="col-12">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title"> قسم الإدارة </h3>
+
+                <div class="card-tools">
+                  <div class="input-group input-group-sm" style="width: 150px;">
+                    <!-- <input type="text" name="table_search" class="form-control float-right" placeholder="بحث"> -->
+
+                    <div class="input-group-append">
+                      <!-- <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>الإيميل </th>
+                      <th>اسم المستخدم </th>
+                      <th>الحالة</th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for ad in admin %}
+                  
+                    <tr>
+                      <td>{{ ad.id }}</td>
+                      <td>{{ ad.email }}</td>
+                      <td>{{ ad.username }}</td>
+                      <td><a href="/manage_request/{{ ad.id }}/accept" class="btn btn-success ml-3">قبول</a>
+                        <a href="/manage_request/{{ ad.id }}/delete" class="btn btn-danger">حذف</a></td>
+                     
+                    </tr>
+                   
+                     
+                   
+                   
+                  </tbody>
+                
+                  {% empty%}  
+                </table>
+                  <h5 class="text-center p-3">لا يوجد</h5>
+                  {% endfor %}  
+                </table>
+              
+              </div>
+              
+             
+              <!-- /.card-body -->
+              </div>
+           
+        </div>
+
+
+
+            <div class="col-12">
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">  قسم المدرسين  </h3>
+    
+                    <div class="card-tools">
+                      <div class="input-group input-group-sm" style="width: 150px;">
+                        <!-- <input type="text" name="table_search" class="form-control float-right" placeholder="بحث"> -->
+    
+                        <div class="input-group-append">
+                          <!-- <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /.card-header -->
+                  <div class="card-body table-responsive p-0">
+                    <table class="table table-hover text-nowrap">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>الإيميل </th>
+                          <th>اسم المستخدم </th>
+                          <th> العنوان </th>
+                          <th>الحالة</th>
+                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for st in staff %}
+                        <tr>
+                          <td>{{ st.id }}</td>
+                          <td>{{ st.email }}</td>
+                          <td>{{ st.username }}</td>
+                          <td>{{ st.staffs.address }}</td>
+                          <td><a href="/manage_request/{{ st.id }}/accept" class="btn btn-success ml-3">قبول</a>
+                            <a href="/manage_request/{{ st.id }}/delete" class="btn btn-danger">حذف</a></td>
+                         
+                        </tr>
+                        {% empty%}  
+                    </table>
+                      <h5 class="text-center p-3">لا يوجد</h5>
+                    
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            
+            </div>
+
+
+
+
+
+
+
+
+
+
+            <div class="col-12">
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">  قسم الطلاب  </h3>
+    
+                    <div class="card-tools">
+                      <div class="input-group input-group-sm" style="width: 150px;">
+                        <!-- <input type="text" name="table_search" class="form-control float-right" placeholder="بحث"> -->
+    
+                        <div class="input-group-append">
+                          <!-- <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /.card-header -->
+                  <div class="card-body table-responsive p-0">
+                    <table class="table table-hover text-nowrap">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th> الاسم الأول </th>
+                          <th>الاسم الأخير</th>
+                          <th>اسم المستخدم </th>
+                          <th>الإيميل </th>
+                          <th> العنوان </th>
+                         
+                          <th>الجنس</th>
+                         
+                          <th> العام الدراسي </th>
+                          
+                          <th> الصف </th>
+                          <th>الصورة الشخصية</th>
+                          <th>الحالة</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for su in student %}
+                        <tr>
+                          <td>{{ su.id }}</td>
+                          <td>{{ su.first_name }}</td>
+                          <td>{{ su.last_name }}</td>                     
+                          <td>{{ su.username }}</td>
+                          <td>{{ su.email }}</td>
+                          <td>{{ su.students.address }}</td>
+                          <td>{{ su.students.gender }}</td>
+
+
+                         
+                          <td>{{ su.students.session_year_id.session_start_year }} - {{ su.students.session_year_id.session_end_year }}</td>
+                         
+                          <td>{{ su.students.course_id.course_name }}</td>
+                          <td><img src="{{ su.students.profile_pic }}" style="width:100px"/></td>
+
+
+                          <td><a href="/manage_request/{{ su.id }}/accept" class="btn btn-success ml-3">قبول</a>
+                            <a href="/manage_request/{{ su.id }}/delete" class="btn btn-danger">حذف</a></td>
+                         
+                        </tr>
+                        {% empty%}  
+                    </table>
+                      <h5 class="text-center p-3">لا يوجد</h5>
+                     
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- /.card -->
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+{% endblock main_content %}

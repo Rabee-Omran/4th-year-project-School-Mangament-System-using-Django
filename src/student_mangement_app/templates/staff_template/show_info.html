@@ -1,0 +1,38 @@
+{% extends 'staff_template/base_template.html' %}
+{% block page_title %}
+ 
+{% endblock page_title %}
+{% block main_content %}
+    <!-- Main content -->
+    <section class="content">
+    
+                    <div class="row">
+             
+           
+                <div class="col-md-11 mx-auto">
+                    <div class="card card-primary">
+                      <div class="card-header p-2">
+                        <h6 class="p-2">تاريخ آخر تعديل <span></span> : <span>{{info.studentInfo_id.updated_at}} </span></h6>
+                      </div><!-- /.card-header -->
+                      
+                      <div class="card-body">
+                        <hr>
+                       <h4> الطالب<span></span> : <span>{{info.student_id.admin.first_name}} {{info.student_id.admin.last_name}}</span></h4>
+                     
+                       <h4>المادة <span></span> : <span>{{info.studentInfo_id.subject_id.subject_name }}</span></h3>
+                            
+                        <h4 class="">العام الدراسي <span></span> : <span>{{info.studentInfo_id.session_year_id}}</span></h3>
+                            <hr>
+                         
+                            <h4 >التقرير :</h3>
+                              <h5>
+                                {{info.info}}
+                              </h5>
+        
+                    
+                    </div>
+                    <!-- /.nav-tabs-custom -->
+                  </div> </div> </div> 
+    </section>
+    <!-- /.content -->
+{% endblock main_content %}

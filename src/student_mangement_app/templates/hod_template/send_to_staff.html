@@ -1,0 +1,91 @@
+{% extends 'hod_template/base_template.html' %}
+{% block page_title %}
+مراسلة مدرس
+{% endblock page_title %}
+{% block main_content %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+                    <div class="row">
+              <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">مراسلة مدرس</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+               <form action="{% url 'send_to_staff_save' %}" method="post">
+                <div class="card-body">
+
+                   <div class="form-group">
+                    <label>اسم المدرس  </label>
+                       {% csrf_token %}
+                       <select class="form-control" name="staff">
+                        {% for staff in staffs %}
+                          <option value="{{ staff.admin.id }}">{{ staff.admin.first_name }} {{ staff.admin.last_name }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>الرسالة</label>
+                    <textarea class="form-control" rows="6" name="message"></textarea>
+                  </div>
+                   <div class="form-group">
+                {% if messages %}
+                    {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                    <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                    {% endif %}
+                    {% if message.tags == 'success' %}
+                    <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                    {% endif %}
+                    {% endfor %}
+                {% endif %}
+                    </div>
+
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary btn-block" id="fetch_student"> إرسال</button>
+                </div>
+               </form>
+            </div>
+
+          
+         <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">جميع المراسلات </h3>
+              </div>
+
+               <div class="table">
+               <table class="table">
+                   <tr>
+                       <th>ID</th>
+                       <th>اسم المدرس </th>
+                       <th> الرسالة</th>
+                       <th>  تاريخ الإرسال</th>
+                       
+                   </tr>
+                   {% for row in history %}
+                        <tr>
+                            <td>{{ row.id }}</td>
+                            <td>{{ row.staff_id.admin.first_name }} {{ row.staff_id.admin.last_name }}</td>
+                            <td>{{ row.message }}</td>
+                            <td>{{ row.created_at }}</td>
+                          
+                        </tr>
+                   {% endfor %}
+               </table>
+               </div>
+            </div> 
+
+
+
+          </div>
+          </div>
+      </div>
+    </section>
+ 
+{% endblock main_content %}

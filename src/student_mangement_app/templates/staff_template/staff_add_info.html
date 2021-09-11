@@ -1,0 +1,208 @@
+{% extends 'staff_template/base_template.html' %}
+{% load bootstrap4 %}
+{% block page_title %}
+ تقارير الطلاب
+{% endblock page_title %}
+{% block main_content %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid pb-5">
+                    <div class="row">
+              <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title"> إنشاء التقارير </h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+                <div class="card-body">
+                   <div class="form-group">
+                    <label>المادة </label>
+                    <select class="form-control" name="subject" id="subject">
+                        {% for subject in subjects %}
+                          <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>العام الدراسي </label>
+                    <select class="form-control" name="session_year" id="session_year">
+                        {% for session_year in session_years %}
+                          <option value="{{ session_year.id }}">{{ session_year.session_start_year }} TO {{ session_year.session_end_year }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                   <div class="form-group">
+                      {% if messages %}
+                        {% for message in messages %}
+                        {% if message.tags == 'error' %}
+                        <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                        {% endif %}
+                        {% if message.tags == 'success' %}
+                        <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                        {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="button" class="btn btn-primary btn-block" id="fetch_student">جلب بيانات الطلاب </button>
+                </div>
+                <div id="student_data" class="card-footer">
+
+                </div>
+            </div>
+            <!-- /.card -->
+
+
+
+          </div>
+          </div>
+      </div>
+
+      <div class="card card-primary ">
+        <div class="card-header">
+          <h3 class="card-title">جميع التقارير  </h3>
+        </div>    
+
+
+          <form method="GET">
+          <div class="row p-3 ">
+
+            <div class="col-sm-2" >
+              <div class="form-group is-valid">  
+                <input type="text" name="student_id__admin__first_name__icontains" class="form-control is-valid" placeholder="الاسم الأول" title="" ></div>
+            </div>
+
+            <div class="col-sm-2">            
+              <div class="form-group is-valid">   
+                <input type="text" name="student_id__admin__last_name__icontains" value="" class="form-control is-valid" placeholder="الاسم الأخير" title="" >
+              </div>
+            </div>
+
+            <div class="col-sm-2">       
+              <div class="form-group is-valid">         
+                <input type="text" name="studentInfo_id__subject_id__subject_name__icontains" value="" class="form-control is-valid" placeholder="اسم المادة" title="" ></div>    
+          </div>  
+
+          <div class="col-sm-2">
+            <input type="submit" value="ابحث" class="btn btn-info">
+        </div>      
+      </form> 
+    </div>
+           
+            
+   
+
+     
+      
+       
+         <div class="table">
+         <table class="table">
+             <tr>
+                 <th>ID</th>
+                 <th>الطالب</th>
+                 <th> المادة</th>
+                 <th> العام الدراسي</th>
+                 <th> التقرير</th>
+               
+             </tr>
+            
+             {% for info in info_all %}
+                  <tr>
+                      <td>{{ info.id }}</td>
+                      <td>{{ info.student_id.admin.first_name }} {{ info.student_id.admin.last_name }}</td>
+                      <td>{{ info.studentInfo_id.subject_id.subject_name }}</td>
+                      <td>{{info.studentInfo_id.session_year_id}}</td>
+                      <td><a href="{%url 'show_info' info.id%}">مشاهدة التقرير</a></td>
+                     
+                  </tr>
+             {% endfor %}
+         </table>
+         </div>
+      </div>
+
+    </section>
+    <!-- /.content -->
+{% endblock main_content %}
+{% block custom_js %}
+<script>
+    $(document).ready(function(){
+         $("#fetch_student").click(function(){    //#fetch_student come from button id  above
+             var subject=$("#subject").val()     //this id also
+            var session_year=$("#session_year").val()  //this id also
+
+            $.ajax({
+                url:'{% url 'get_students' %}',
+                type:'POST',
+                data:{subject:subject,session_year:session_year},  //pass data to view func
+            })
+            .done(function(response){
+                var json_data=JSON.parse(response);
+                console.log(json_data)
+                var div_data="<div class='form-group'><div class='row'>";
+                for(key in json_data)
+                {
+                    div_data+="<div class='col-lg-2'><div class='form-check'><input type='radio' id=student_data  name='student_data' value='"+json_data[key]['id']+"'><label class='form-check-label pl-2'>"+json_data[key]['name']+"</label></div></div>";
+                }
+                
+                div_data+="</div></div>";
+                div_data+=" <div class='form-group'><label>  التقرير : </label><textarea   name='info_data' id='info_data' rows='4' cols='50' class='form-control'></textarea></div>";
+                div_data+="<div class='form-group'>";
+                div_data+="<button id='save_info' class='btn btn-success btn-block' type='button'>حفظ  </button>";
+                div_data+="</div>";
+
+               $("#student_data").html(div_data);  // where will be shown
+
+            })
+            .fail(function(){
+                alert("فشل في جلب الطلاب ")
+            })
+
+
+            $(document).on("click","#save_info",function(){
+
+                $(this).attr("disabled","disabled")
+                $(this).text("جاري الحفظ ...")
+                var student_data=$("#student_data:checked").val();
+                var subject_id=$("#subject").val();
+                 var session_year_id=$("#session_year").val();
+                 var info_data = $('textarea#info_data').val();
+
+             
+                //  console.log(session_year_id)
+                //   console.log(student_data)
+                //   console.log(subject_id)
+                //   console.log(info_data)
+
+
+               
+
+                $.ajax({
+                        url:'{% url 'save_staff_add_info' %}',
+                        type:'POST',
+                        data:{student_id:student_data,info_data:info_data,subject_id:subject_id,session_year_id:session_year_id},
+                    })
+                    .done(function(response){
+
+                       
+                        location.reload()
+                        if(response=="OK"){
+                            // alert("تم الحفظ ")
+                        }
+                        else{
+                            alert("فشل الحفظ ")
+                        }
+                    })
+                    .fail(function(){
+                        alert("فشل الحفظ")
+                    })
+            })
+        })
+    })
+</script>
+{% endblock custom_js %}
